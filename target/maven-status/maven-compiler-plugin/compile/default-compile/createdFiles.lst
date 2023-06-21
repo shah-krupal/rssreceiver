@@ -1,0 +1,16 @@
+com/example/rssreceiver/services/serviceImpls/WebHookServiceImpl.class
+com/example/rssreceiver/models/Email.class
+com/example/rssreceiver/repositories/FeedSubscriberRepo.class
+com/example/rssreceiver/services/FeedSubscriberService.class
+com/example/rssreceiver/controllers/WebHookController.class
+com/example/rssreceiver/services/serviceImpls/WebHookServiceImpl$1.class
+com/example/rssreceiver/services/serviceImpls/MailingServiceImpl.class
+com/example/rssreceiver/models/FeedSubscriber.class
+com/example/rssreceiver/RssreceiverApplication.class
+com/example/rssreceiver/services/WebHookService.class
+com/example/rssreceiver/models/SubscribeRequest.class
+com/example/rssreceiver/services/MailingService.class
+com/example/rssreceiver/services/serviceImpls/FeedSubscriberServiceImpl.class
+com/example/rssreceiver/services/serviceImpls/WebHookServiceImpl$2.class
+com/example/rssreceiver/models/FeedReceived.class
+com/example/rssreceiver/controllers/FeedSubscriberController.class

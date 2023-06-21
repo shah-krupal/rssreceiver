@@ -1,0 +1,14 @@
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/models/FeedReceived.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/models/Email.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/services/serviceImpls/FeedSubscriberServiceImpl.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/services/serviceImpls/MailingServiceImpl.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/controllers/WebHookController.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/services/serviceImpls/WebHookServiceImpl.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/services/WebHookService.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/models/SubscribeRequest.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/services/MailingService.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/RssreceiverApplication.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/repositories/FeedSubscriberRepo.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/models/FeedSubscriber.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/services/FeedSubscriberService.java
+/Users/krupalshah/IdeaProjects/rssreceiver/src/main/java/com/example/rssreceiver/controllers/FeedSubscriberController.java
