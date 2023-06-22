@@ -3,65 +3,66 @@ package com.example.rssreceiver.services.serviceImpls;
 import com.example.rssreceiver.models.Email;
 import com.example.rssreceiver.models.FeedReceived;
 import com.example.rssreceiver.models.FeedSubscriber;
+import com.example.rssreceiver.models.UserFeed;
 import com.example.rssreceiver.repositories.FeedSubscriberRepo;
 import com.example.rssreceiver.services.MailingService;
 import com.example.rssreceiver.services.WebHookService;
 import com.rometools.rome.feed.rss.Channel;
-import com.rometools.rome.feed.synd.SyndEntry;
-import com.rometools.rome.feed.synd.SyndFeed;
 import jakarta.mail.*;
 import jakarta.mail.internet.AddressException;
 import jakarta.mail.internet.InternetAddress;
 import jakarta.mail.internet.MimeMessage;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalTime;
 import java.util.*;
 
 @Service
 public class WebHookServiceImpl implements WebHookService {
     @Autowired
-    private MailingService mailingService ;
+    private MailingService mailingService;
     @Autowired
-    private FeedSubscriberRepo feedSubscriberRepo ;
+    private FeedSubscriberRepo feedSubscriberRepo;
+
+    @Autowired
+    private MongoTemplate mongoTemplate;
 
     private static final String MAIL_SERVER = "smtp";
     private static final String SMTP_HOST_NAME = "smtp.gmail.com";
     private static final int SMTP_HOST_PORT = 587;
-    private static final String USER_NAME = "shahdummy91";  // GMail user name (just the part before "@gmail.com")
+    private static final String USER_NAME = "shahdummy91"; // GMail user name (just the part before "@gmail.com")
     private static final String PASSWORD = "xqrjohmbnhxhylnv"; // GMail password
+
     @Override
     public String hook(Channel channel) {
-        Email email = new Email() ;
-        email.setSubject(channel.getTitle());
-        email.setLink(channel.getUri());
-        email.setBody(channel.getDescription() + LocalTime.now());
+        if (channel == null)
+            return "Null Channel";
         try {
-            System.out.println("channel "+channel.getTitle() );
-//            Query query = new Query() ;
-//            query.addCriteria(Criteria.where("feedTitle").is)
-            FeedSubscriber feedData = feedSubscriberRepo.findByFeedTitle(channel.getTitle());
-            System.out.println(feedData.getEmailIds());
-            System.out.println(feedData);
-            List<String> emailList = feedData.getEmailIds();
-            if(emailList != null)
-            {
+            System.out.println("channel " + channel.getTitle());
+            Query query = new Query();
+            query.addCriteria(Criteria.where("feedTitles").is(channel.getTitle()));
+
+            List<UserFeed> users = mongoTemplate.find(query, UserFeed.class);
+            List<String> emailList = new ArrayList<>();
+            for (UserFeed feed : users) {
+                emailList.add(feed.getEmailId());
+            }
+
+            if (emailList != null) {
                 System.out.println(emailList);
-                return mailing2(email, emailList) ;
-            }
-            else
-            {
-                return "DONE" ;
+                return mailing2(channel, emailList);
+            } else {
+                return "DONE";
             }
 
-        }catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
-            return "Failure to connect to DB" ;
+            return "Failure to connect to DB";
         }
-
 
     }
 
@@ -90,44 +91,44 @@ public class WebHookServiceImpl implements WebHookService {
         // Create a default MimeMessage object.
         MimeMessage message = new MimeMessage(session);
 
-        try{
+        try {
             // Set From: header field of the header.
             message.setFrom(new InternetAddress(USER_NAME));
 
             // NO TO or CC. ONLY BCC
-//            InternetAddress[] toAddress = new InternetAddress[mailIds.size()];
-//
-//            // To get the array of toaddresses
-//            for( int i = 0; i < mailIds.size(); i++ ) {
-//                toAddress[i] = new InternetAddress(mailIds.get(i));
-//            }
-//
-//            // Set To: header field of the header.
-//            for( int i = 0; i < toAddress.length; i++) {
-//                message.addRecipient(Message.RecipientType.TO, toAddress[i]);
-//            }
-//
-//            InternetAddress[] ccAddress = new InternetAddress[cc.length];
-//
-//            // To get the array of ccaddresses
-//            for( int i = 0; i < cc.length; i++ ) {
-//                ccAddress[i] = new InternetAddress(cc[i]);
-//            }
-//
-//            // Set cc: header field of the header.
-//            for( int i = 0; i < ccAddress.length; i++) {
-//                message.addRecipient(Message.RecipientType.CC, ccAddress[i]);
-//            }
+            // InternetAddress[] toAddress = new InternetAddress[mailIds.size()];
+            //
+            // // To get the array of toaddresses
+            // for( int i = 0; i < mailIds.size(); i++ ) {
+            // toAddress[i] = new InternetAddress(mailIds.get(i));
+            // }
+            //
+            // // Set To: header field of the header.
+            // for( int i = 0; i < toAddress.length; i++) {
+            // message.addRecipient(Message.RecipientType.TO, toAddress[i]);
+            // }
+            //
+            // InternetAddress[] ccAddress = new InternetAddress[cc.length];
+            //
+            // // To get the array of ccaddresses
+            // for( int i = 0; i < cc.length; i++ ) {
+            // ccAddress[i] = new InternetAddress(cc[i]);
+            // }
+            //
+            // // Set cc: header field of the header.
+            // for( int i = 0; i < ccAddress.length; i++) {
+            // message.addRecipient(Message.RecipientType.CC, ccAddress[i]);
+            // }
 
             InternetAddress[] bccAddress = new InternetAddress[mailIds.size()];
 
             // To get the array of bccaddresses
-            for( int i = 0; i < mailIds.size(); i++ ) {
+            for (int i = 0; i < mailIds.size(); i++) {
                 bccAddress[i] = new InternetAddress(mailIds.get(i));
             }
 
             // Set bcc: header field of the header.
-            for( int i = 0; i < bccAddress.length; i++) {
+            for (int i = 0; i < bccAddress.length; i++) {
                 message.addRecipient(Message.RecipientType.BCC, bccAddress[i]);
             }
 
@@ -138,7 +139,7 @@ public class WebHookServiceImpl implements WebHookService {
             message.setSentDate(new Date());
 
             // Now set the actual message
-            message.setContent(email.getBody(),"text/html");
+            message.setContent(email.getBody(), "text/html");
 
             System.out.println("Get Session and Send Mail");
             // Send message
@@ -147,32 +148,28 @@ public class WebHookServiceImpl implements WebHookService {
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
             System.out.println("Sent Message Successfully....");
-            return "Sent Message Successfully." ;
-        }
-        catch (AddressException ae) {
+            return "Sent Message Successfully.";
+        } catch (AddressException ae) {
             System.out.println("address it is");
             ae.printStackTrace();
-            return "ADDRESS EXCEPTION" ;
-        }
-        catch (MessagingException me) {
+            return "ADDRESS EXCEPTION";
+        } catch (MessagingException me) {
             System.out.println("message it is");
             me.printStackTrace();
-            return "MESSAGE EXCEPTION" ;
+            return "MESSAGE EXCEPTION";
         }
 
     }
 
-
-
     @Override
     public String feedhook(FeedReceived feedReceived) {
-        try{
-            FeedSubscriber feedSubscriber = new FeedSubscriber() ;
+        try {
+            FeedSubscriber feedSubscriber = new FeedSubscriber();
             feedSubscriber.setFeedId(feedReceived.getFeedId());
             feedSubscriber.setFeedTitle(feedReceived.getTitle());
-            feedSubscriberRepo.save(feedSubscriber) ;
+            feedSubscriberRepo.save(feedSubscriber);
             return "Success";
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
             return "Failed";
         }
@@ -239,6 +236,5 @@ public class WebHookServiceImpl implements WebHookService {
             return "MESSAGE EXCEPTION";
         }
     }
-
 
 }

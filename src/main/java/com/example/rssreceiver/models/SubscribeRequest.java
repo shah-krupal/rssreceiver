@@ -1,8 +1,8 @@
 package com.example.rssreceiver.models;
 
 public class SubscribeRequest {
-    String emailId ;
-    Integer feedId ;
+    String emailId;
+    String feedTitle;
 
     public String getEmailId() {
         return emailId;
@@ -12,11 +12,11 @@ public class SubscribeRequest {
         this.emailId = emailId;
     }
 
-    public Integer getFeedId() {
-        return feedId;
+    public String getFeedTitle() {
+        return feedTitle;
     }
 
-    public void setFeedId(Integer feedId) {
-        this.feedId = feedId;
+    public void setFeedTitle(String feedTitle) {
+        this.feedTitle = feedTitle;
     }
 }
